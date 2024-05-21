@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Banner to Video</title>
+    <title>Create Banner</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -28,7 +28,8 @@
         label span {
             color: red;
         }
-        input[type="file"] {
+        input[type="tel"],
+        input[type="text"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
@@ -50,74 +51,21 @@
         input[type="submit"]:hover {
             background-color: #0056b3;
         }
-        .progress {
-            width: 100%;
-            background-color: #ddd;
-            border-radius: 5px;
-            margin: 10px 0;
-        }
-        .bar {
-            width: 0%;
-            height: 30px;
-            background-color: #007bff;
-            text-align: center;
-            line-height: 30px;
-            color: #fff;
-            border-radius: 5px;
-            transition: width 0.3s ease;
-        }
-        .message {
-            margin-top: 10px;
-            display: none;
-        }
     </style>
 </head>
 <body>
-    <h2>Add Banner to Video</h2>
-    <form id="uploadForm" method="POST" action="/submit_video" enctype="multipart/form-data">
-        <label for="video">Video <span>*</span>:</label>
-        <input type="file" id="video" name="video" accept="video/*" required>
+    <h2>Create Banner</h2>
+    <form method="POST" action="/submit_banner">
+        <label for="phone_number">Phone Number <span>*</span>:</label>
+        <input type="tel" id="phone_number" name="phone_number" required>
 
-        <label for="banner_image">Banner Image <span>*</span>:</label>
-        <input type="file" id="banner_image" name="banner_image" accept="image/*" required>
+        <label for="address">Address <span>*</span> (max 20 characters):</label>
+        <input type="text" id="address" name="address" maxlength="20" required>
 
-        <input type="submit" id="submitButton" value="Submit">
+        <label for="city">City <span>*</span>:</label>
+        <input type="text" id="city" name="city" required>
 
-        <div class="progress">
-            <div class="bar" id="progressBar"></div>
-        </div>
-
-        <div class="message" id="downloadMessage">Downloading...</div>
+        <input type="submit" value="Submit">
     </form>
-
-    <script>
-        document.getElementById('uploadForm').addEventListener('submit', function() {
-            document.getElementById('submitButton').setAttribute('disabled', 'disabled');
-            document.getElementById('downloadMessage').style.display = 'none';
-
-            var progressBar = document.getElementById('progressBar');
-            var xhr = new XMLHttpRequest();
-
-            xhr.upload.addEventListener('progress', function(event) {
-                if (event.lengthComputable) {
-                    var percentComplete = (event.loaded / event.total) * 100;
-                    progressBar.style.width = percentComplete + '%';
-                    progressBar.innerHTML = percentComplete.toFixed(0) + '%';
-                }
-            }, false);
-
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    progressBar.style.width = '100%';
-                    progressBar.innerHTML = '100%';
-                    document.getElementById('downloadMessage').style.display = 'block';
-                    document.getElementById('downloadMessage').innerHTML = 'Download complete!';
-                    document.getElementById('submitButton').removeAttribute('disabled');
-                }
-            };
-
-            return true;
-        });
-    </script>
 </body>
 </html>
