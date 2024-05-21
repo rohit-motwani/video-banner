@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Banner to Video</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+        form {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            display: inline-block;
+            text-align: left;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+        label span {
+            color: red;
+        }
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #000;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .progress {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .bar {
+            width: 0%;
+            height: 30px;
+            background-color: #007bff;
+            text-align: center;
+            line-height: 30px;
+            color: #fff;
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+        .message {
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h2>Add Banner to Video</h2>
+    <form id="uploadForm" method="POST" action="/submit_video" enctype="multipart/form-data">
+        <label for="video">Video <span>*</span>:</label>
+        <input type="file" id="video" name="video" accept="video/*" required>
+
+        <label for="banner_image">Banner Image <span>*</span>:</label>
+        <input type="file" id="banner_image" name="banner_image" accept="image/*" required>
+
+        <input type="submit" id="submitButton" value="Submit">
+
+        <div class="progress">
+            <div class="bar" id="progressBar"></div>
+        </div>
+
+        <div class="message" id="downloadMessage">Downloading...</div>
+    </form>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function() {
+            document.getElementById('submitButton').setAttribute('disabled', 'disabled');
+            document.getElementById('downloadMessage').style.display = 'none';
+
+            var progressBar = document.getElementById('progressBar');
+            var xhr = new XMLHttpRequest();
+
+            xhr.upload.addEventListener('progress', function(event) {
+                if (event.lengthComputable) {
+                    var percentComplete = (event.loaded / event.total) * 100;
+                    progressBar.style.width = percentComplete + '%';
+                    progressBar.innerHTML = percentComplete.toFixed(0) + '%';
+                }
+            }, false);
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    progressBar.style.width = '100%';
+                    progressBar.innerHTML = '100%';
+                    document.getElementById('downloadMessage').style.display = 'block';
+                    document.getElementById('downloadMessage').innerHTML = 'Download complete!';
+                    document.getElementById('submitButton').removeAttribute('disabled');
+                }
+            };
+
+            return true;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overlay Text on Image</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin-top: 10%;
+            padding: 0;
+            color: #333;
+            text-align: center;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            position: relative;
+            width: 90%; 
+            max-width: 800px; 
+            height: auto;
+            margin: auto;
+        }
+
+        .banner-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .right-section {
+            position: absolute;
+            top: 35%;
+            right: 5%; 
+            transform: translate(0, -50%);
+            color: black; 
+            padding: 10px; 
+            border-radius: 5px;
+            text-align: center;
+            max-width: 30%; 
+            width: auto; 
+        }
+
+        .location {
+            margin: 0;
+            font-size: 1.8em;
+        }
+
+        .phone {
+            margin: 5px 0 0;
+            font-size: 1.5em;
+        }
+
+        @media (max-width: 768px) { 
+            .location {
+                font-size: 1.5em; 
+            }
+
+            .phone {
+                font-size: 1em; 
+            }
+
+            .right-section {
+                top: 40%;
+                right: 10%;
+            }
+        }
+
+        @media (max-width: 480px) { 
+            .location {
+                font-size: 1em; 
+            }
+
+            .phone {
+                font-size: 0.7em; 
+            }
+
+            .right-section {
+                top: 45%;
+                right: 5%;
+                padding: 8px;
+            }
+        }
+
+        @media (max-width: 320px) { 
+            .location {
+                font-size: 0.7em; 
+            }
+
+            .phone {
+                font-size: 0.5em; 
+            }
+
+            .right-section {
+                top: 45%;
+                right: 5%;
+                padding: 5px;
+            }
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            button {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            button {
+                font-size: 10px;
+                padding: 4px 8px;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        function downloadBanner() {
+            var button = document.querySelector('button');
+            button.style.display = 'none';  // Hide the button
+
+            var container = document.querySelector(".container");
+
+            // Ensure the container dimensions are updated before capturing
+            container.style.width = "800px"; // Fixed width for download
+
+            html2canvas(container, {
+                useCORS: true, // Enable CORS to capture cross-origin images
+                scrollX: 0,
+                scrollY: 0,
+                scale: 1, // To ensure proper rendering on retina displays
+            }).then(function(canvas) {
+                var link = document.createElement('a');
+                link.href = canvas.toDataURL("image/jpeg");
+                link.download = 'banner.jpg';
+                link.click();
+
+                button.style.display = 'block';  // Show the button again
+
+                // Reset the container dimensions to be responsive
+                container.style.width = "90%";
+            }).catch(function(error) {
+                console.error('Error capturing the banner:', error);
+                button.style.display = 'block';  // Show the button again in case of error
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <img src="../static/banner-main.jpg" alt="Banner Image" class="banner-image" onload="this.style.opacity=1">
+        <div class="right-section">
+            <h1 class="location">{{ address }}</h1>
+            <h2 class="location">{{ city }}</h2>
+            <p class="phone">+91 {{ phone_number }}</p>
+        </div>
+    </div>
+    <button onclick="downloadBanner()">Download as Image</button>
+</body>
+</html>
